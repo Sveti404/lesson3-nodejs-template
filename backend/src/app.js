@@ -6,6 +6,7 @@ const cors = require('kcors');
 
 const database = require('./database');
 
+
 // Create a new Koa instance for our API
 const app = new Koa();
 
@@ -27,15 +28,26 @@ app.use(bodyParser());
 // Lists Chat entries in the database and returns them
 // in the response body with status code 200
 const listChats = async (ctx) => {
-  const options = {};
-
-  const chats = await database.Chat.findAll(options);
+  let options = {};
+  let chats = "No chats found";
+  if (ctx.params.room) {
+    options = {where: {room: ctx.params.room}};
+    chats = await database.Chat.findAll(options);
+  } else {
+    chats = await database.Chat.findAll(options);
+  }
 
   const response = {
     results: chats,
   };
 
   ctx.body = response;
+  /*
+  ctx.body = "";
+  for (var i = 0; i < response.results.length; i++) {
+    current_msg = response.results[i];
+    ctx.body += current_msg.message+" "+current_msg.i;
+  }*/
 };
 
 // Creates a Chat entry in the database and returns it
@@ -44,9 +56,9 @@ const listChats = async (ctx) => {
 const createChat = async (ctx) => {
   const { body } = ctx.request;
 
-  const { message } = body;
+  const { message, nickname, room } = body;
 
-  const chat = await database.Chat.create({ message });
+  const chat = await database.Chat.create({ message, nickname, room });
 
   ctx.body = chat;
   ctx.status = 201;
@@ -57,6 +69,7 @@ const publicRouter = new Router({ prefix: '/api' });
 
 // Connect the GET /api/chats endpoint to listChats middleware
 publicRouter.get('/chats', listChats);
+publicRouter.get('/chats/:room(\\d+)', listChats)
 
 // Connect the POST /api/chats endpoint to createChats middleware
 publicRouter.post('/chats', createChat);

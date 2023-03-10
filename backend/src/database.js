@@ -16,6 +16,14 @@ const Chat = sequelize.define('chats', {
     // Disallows creating chat entries without a message
     allowNull: false,
   },
+  nickname: {
+    type: Sequelize.TEXT,
+    allowNull: false,
+  },
+  room: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
 }, {
   timestamps: true,
 });
