@@ -68,8 +68,7 @@ const createChat = async (ctx) => {
 const publicRouter = new Router({ prefix: '/api' });
 
 // Connect the GET /api/chats endpoint to listChats middleware
-publicRouter.get('/chats', listChats);
-publicRouter.get('/chats/:room(\\d+)', listChats)
+publicRouter.get('/chats/:room(\\d+)*', listChats)
 
 // Connect the POST /api/chats endpoint to createChats middleware
 publicRouter.post('/chats', createChat);
