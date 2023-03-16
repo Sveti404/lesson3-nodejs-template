@@ -53,6 +53,10 @@ const listChats = async (ctx) => {
 // Creates a Chat entry in the database and returns it
 // in the response body with status code 201.
 // Fails with 500 if message was not provided
+const greeting = async (ctx) => {
+  ctx.body = "Tervetuloa chattipalstalle";
+  ctx.status = 200
+}
 const createChat = async (ctx) => {
   const { body } = ctx.request;
 
@@ -68,7 +72,8 @@ const createChat = async (ctx) => {
 const publicRouter = new Router({ prefix: '/api' });
 
 // Connect the GET /api/chats endpoint to listChats middleware
-publicRouter.get('/chats/:room(\\d+)*', listChats)
+publicRouter.get('/chats/:room(\\d+)*', listChats);
+publicRouter.get('/Terve',greeting);
 
 // Connect the POST /api/chats endpoint to createChats middleware
 publicRouter.post('/chats', createChat);
